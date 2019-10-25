@@ -1,21 +1,11 @@
-require 'pry'
-
 class Pokemon
-  attr_accessor(:name, :type, :db)
-  attr_reader(:id)
+  attr_accessor :id, :name, :type, :db
   
-  def initialize(
-    id:,
-    name: "Pikachu",
-    type: "Electric",
-    hp: nil,
-    db:"pokemon"
-    )
+  def initialize(id:, name:, type:, db:)
     
     @id = id
     @name = name
     @type = type
-    @hp = hp
     @db = db
   end
   
@@ -26,13 +16,12 @@ class Pokemon
     SQL
     
     db.execute(sql, name, type)
-    # binding.pry
     @id = db.execute("SELECT last_insert_rowid() FROM pokemon")[0][0][0]
   end
   
   def self.find(id, db)
     sql = "SELECT * FROM pokemon WHERE id = ? LIMIT 1"
     result = db.execute(sql, id)[0]
-    Pokemon.new(result[0], result[1], result[2], result[3])
+    Pokemon.new(id: result[0], name: result[1], type: result[2], db: db)
   end
 end
